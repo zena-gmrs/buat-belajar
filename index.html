@@ -3,25 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Visualisator I/O Pemrograman untuk Pemula</title>
+  <title>Kamus Interaktif Elemen Pemrograman</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Family -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', sans-serif; }
     .code-font { font-family: 'Fira Code', monospace; }
-    
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
-
-    /* Glow Effect */
-    .glow-active {
-      box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
-    }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col">
@@ -29,375 +21,285 @@
   <!-- Header -->
   <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50 px-6 py-4 flex flex-wrap justify-between items-center gap-4">
     <div class="flex items-center space-x-3">
-      <div class="bg-blue-600 p-2 rounded-lg text-white">
+      <div class="bg-emerald-600 p-2 rounded-lg text-white">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
         </svg>
       </div>
       <div>
-        <h1 class="text-xl font-bold bg-gradient-to-r from-blue-400 to-indigo-300 bg-clip-text text-transparent">Visualisator I/O Interaktif</h1>
-        <p class="text-xs text-slate-400">Pahami Alur Data: Input ➔ Proses ➔ Output</p>
+        <h1 class="text-xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Kamus Elemen Pemrograman</h1>
+        <p class="text-xs text-slate-400">Pilih elemen dasar, lihat kodenya, dan uji hasilnya!</p>
       </div>
     </div>
 
-    <!-- Pilihan Studi Kasus & Bahasa -->
-    <div class="flex flex-wrap items-center gap-3">
-      <!-- Pilihan Kasus -->
-      <select id="caseSelect" onchange="changeCase()" class="bg-slate-800 border border-slate-700 text-sm text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <option value="square">1. Hitung Kuadrat (Aritmatika)</option>
-        <option value="grade">2. Cek Kelulusan (Percabangan IF-ELSE)</option>
-        <option value="greet">3. Sapa Pengguna (Manipulasi String)</option>
-      </select>
-
-      <!-- Tab Bahasa -->
-      <div class="flex bg-slate-800 p-1 rounded-lg border border-slate-700 text-xs font-semibold">
-        <button onclick="setLanguage('python')" id="btn-python" class="px-3 py-1.5 rounded-md transition-all text-slate-400 hover:text-white">Python</button>
-        <button onclick="setLanguage('cpp')" id="btn-cpp" class="px-3 py-1.5 rounded-md transition-all text-slate-400 hover:text-white">C++</button>
-        <button onclick="setLanguage('js')" id="btn-js" class="px-3 py-1.5 rounded-md transition-all text-slate-400 hover:text-white">JavaScript</button>
-      </div>
+    <!-- Pilihan Bahasa Pemrograman -->
+    <div class="flex bg-slate-800 p-1 rounded-lg border border-slate-700 text-xs font-semibold">
+      <button onclick="setLanguage('python')" id="btn-python" class="px-3 py-1.5 rounded-md transition-all text-slate-400 hover:text-white">Python</button>
+      <button onclick="setLanguage('js')" id="btn-js" class="px-3 py-1.5 rounded-md transition-all text-slate-400 hover:text-white">JavaScript</button>
+      <button onclick="setLanguage('cpp')" id="btn-cpp" class="px-3 py-1.5 rounded-md transition-all text-slate-400 hover:text-white">C++</button>
     </div>
   </header>
 
-  <!-- Content Container -->
+  <!-- Main Content -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-    <!-- Panel Kiri: Editor Kode & Simulasi Memori (5 Cols) -->
-    <section class="lg:col-span-5 flex flex-col gap-6">
-      <!-- Card Code Preview -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl">
+    <!-- Sidebar Pilihan Elemen (4 Cols) -->
+    <section class="lg:col-span-4 flex flex-col gap-3">
+      <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Daftar Elemen Dasar</h2>
+      
+      <div id="elementList" class="flex flex-col gap-2">
+        <!-- Tombol elemen akan di-generate lewat JS -->
+      </div>
+
+      <!-- Penjelasan Elemen Terpilih -->
+      <div class="mt-4 bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col gap-2">
+        <h3 class="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Tentang Elemen Ini:
+        </h3>
+        <p id="elementDesc" class="text-xs text-slate-300 leading-relaxed">
+          Pilih salah satu elemen di atas untuk melihat penjelasan dan kodenya.
+        </p>
+      </div>
+    </section>
+
+    <!-- Panel Kanan: Kode & Hasil Output (8 Cols) -->
+    <section class="lg:col-span-8 flex flex-col gap-6">
+      
+      <!-- Box Kode -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-xl flex flex-col">
         <div class="bg-slate-800/80 px-4 py-3 border-b border-slate-700/50 flex justify-between items-center">
           <span class="text-xs font-semibold text-slate-300 flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block"></span>
             <span class="w-2.5 h-2.5 rounded-full bg-yellow-500 inline-block"></span>
             <span class="w-2.5 h-2.5 rounded-full bg-green-500 inline-block"></span>
-            <span id="codeTitle" class="ml-2 font-mono text-slate-400">main.py</span>
+            <span id="codeFileName" class="ml-2 font-mono text-slate-400">script.py</span>
           </span>
-          <span class="text-[10px] bg-slate-700 text-slate-300 px-2 py-0.5 rounded uppercase font-bold" id="langBadge">PYTHON</span>
+          <span class="text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-mono uppercase font-bold" id="badgeLang">PYTHON</span>
         </div>
-        <div class="p-4 code-font text-sm leading-relaxed overflow-x-auto bg-slate-950/70" id="codeDisplay">
-          <!-- Kode akan di-inject lewat JavaScript -->
-        </div>
-      </div>
-
-      <!-- Card Penjelasan & Memori (Variable Inspector) -->
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex-1 flex flex-col gap-4">
-        <h3 class="text-sm font-semibold text-slate-300 flex items-center gap-2">
-          <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"/>
-          </svg>
-          Status Memori RAM (Variabel Real-time)
-        </h3>
-        
-        <div id="memoryContainer" class="grid grid-cols-2 gap-3 text-xs">
-          <!-- Variabel terdaftar di sini secara dinamik -->
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-slate-500 italic">
-            Belum ada data di memori.
-          </div>
-        </div>
-
-        <div class="mt-auto bg-slate-800/40 p-3 rounded-lg border border-slate-700/50">
-          <span class="text-xs font-semibold text-blue-400 block mb-1">💡 Info Logika:</span>
-          <p id="explanationText" class="text-xs text-slate-300 leading-normal">
-            Pilih studi kasus dan masukkan input untuk melihat proses animasinya.
-          </p>
+        <div class="p-4 code-font text-sm leading-relaxed overflow-x-auto bg-slate-950/70 min-h-[140px]" id="codeDisplay">
+          <!-- Kode program dimuat disini -->
         </div>
       </div>
-    </section>
 
-    <!-- Panel Kanan: Visualisator I/O Animasi (7 Cols) -->
-    <section class="lg:col-span-7 flex flex-col gap-6">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex-1 flex flex-col justify-between shadow-xl">
-        
-        <!-- Controls Header -->
-        <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
-          <h2 class="text-base font-semibold text-slate-200">Alur Visualisasi Input/Output</h2>
-          <button id="runBtn" onclick="runProcess()" class="bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm px-5 py-2.5 rounded-lg flex items-center gap-2 transition-all shadow-lg shadow-blue-600/20 active:scale-95">
-            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
-              <path d="M4 4l12 6-12 6V4z"/>
+      <!-- Box Simulasi & Hasil Output -->
+      <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 flex-1 flex flex-col gap-4 shadow-xl">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+          <h3 class="text-sm font-semibold text-slate-200 flex items-center gap-2">
+            <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
             </svg>
-            Jalankan Program
+            Simulasi & Hasil Output
+          </h3>
+          <button onclick="executeSimulation()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-medium px-4 py-2 rounded-lg transition-all shadow-lg shadow-emerald-600/20 active:scale-95 flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20"><path d="M4 4l12 6-12 6V4z"/></svg>
+            Jalankan Simulasi
           </button>
         </div>
 
-        <!-- Animation Pipelines (I -> P -> O) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-auto relative">
-          
-          <!-- STEP 1: INPUT -->
-          <div id="step-input" class="bg-slate-950 border-2 border-slate-800 rounded-xl p-4 flex flex-col items-center justify-between transition-all duration-300">
-            <div class="flex items-center gap-2 w-full text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">
-              <span class="w-2 h-2 rounded-full bg-blue-500"></span>
-              1. Input Data
-            </div>
-
-            <div class="w-full my-4">
-              <label id="inputLabel" class="text-xs text-slate-400 mb-2 block font-medium">Masukkan Nilai:</label>
-              <input type="text" id="userInput" value="5" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-center text-white font-mono focus:outline-none focus:border-blue-500 transition-colors">
-            </div>
-
-            <div id="status-input" class="text-[11px] text-slate-500 font-mono">Menunggu Input...</div>
-          </div>
-
-          <!-- STEP 2: PROSES (CPU / LOGIC) -->
-          <div id="step-process" class="bg-slate-950 border-2 border-slate-800 rounded-xl p-4 flex flex-col items-center justify-between transition-all duration-300 relative">
-            <div class="flex items-center gap-2 w-full text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">
-              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
-              2. Proses & Logika
-            </div>
-
-            <!-- Animated Gear/Icon -->
-            <div class="my-4 text-center">
-              <div id="gearIcon" class="text-slate-600 transition-transform duration-700">
-                <svg class="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                </svg>
-              </div>
-              <div id="processFormula" class="text-xs font-mono text-slate-400 mt-2">x * x</div>
-            </div>
-
-            <div id="status-process" class="text-[11px] text-slate-500 font-mono">Idle</div>
-          </div>
-
-          <!-- STEP 3: OUTPUT -->
-          <div id="step-output" class="bg-slate-950 border-2 border-slate-800 rounded-xl p-4 flex flex-col items-center justify-between transition-all duration-300">
-            <div class="flex items-center gap-2 w-full text-slate-400 text-xs font-semibold uppercase tracking-wider mb-3">
-              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-              3. Hasil Output
-            </div>
-
-            <div class="w-full my-4 text-center">
-              <div id="outputDisplay" class="bg-slate-900 border border-slate-800 rounded-lg p-3 font-mono text-lg font-bold text-slate-500 transition-all">
-                -
-              </div>
-            </div>
-
-            <div id="status-output" class="text-[11px] text-slate-500 font-mono">Menunggu Hasil...</div>
-          </div>
-
+        <!-- Area Interaktif Input User (Jika elemen membutuhkan input) -->
+        <div id="interactiveInputArea" class="hidden bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs">
+          <!-- Diisi dinamis -->
         </div>
 
-        <!-- Terminal Console SimuIation -->
-        <div class="mt-6 bg-slate-950 border border-slate-800 rounded-xl p-4">
-          <div class="text-xs text-slate-400 font-mono mb-2 flex items-center justify-between border-b border-slate-800 pb-2">
-            <span>>_ Console Output Terminal</span>
-            <button onclick="clearConsole()" class="text-[10px] text-slate-500 hover:text-slate-300">Clear</button>
+        <!-- Terminal Output -->
+        <div class="bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-xs flex-1 min-h-[120px] flex flex-col justify-between">
+          <div>
+            <div class="text-[10px] text-slate-500 mb-2 uppercase tracking-wider">// Terminal Output Result</div>
+            <div id="terminalOutput" class="text-emerald-400 space-y-1">
+              <span class="text-slate-600">Tekan tombol "Jalankan Simulasi" untuk melihat output.</span>
+            </div>
           </div>
-          <div id="consoleLog" class="font-mono text-xs text-emerald-400 h-24 overflow-y-auto space-y-1">
-            <div class="text-slate-600">// Siap mengeksekusi program...</div>
-          </div>
+          <div class="text-[10px] text-slate-500 text-right mt-4">Status: <span id="runStatus" class="text-slate-400">Idle</span></div>
         </div>
-
       </div>
+
     </section>
 
   </main>
 
-  <!-- JavaScript Logic -->
+  <!-- JavaScript Logika Kamus Elemen -->
   <script>
     // State Aplikasi
     let currentLang = 'python';
-    let currentCase = 'square';
-    let isRunning = false;
+    let currentElement = 'input';
 
-    // Database Studi Kasus dan Penjelasan Multi-Bahasa
-    const cases = {
-      square: {
-        title: "Hitung Kuadrat",
-        inputLabel: "Masukkan Angka (n):",
-        defaultValue: "5",
-        formula: "n * n",
-        explanation: "Program mengambil input angka dari pengguna, mengalikan angka tersebut dengan dirinya sendiri (Proses), dan menampilkan hasilnya ke layar (Output).",
-        code: {
-          python: `<span class="text-slate-500"># 1. Input</span>\n<span class="text-purple-400">angka</span> = <span class="text-yellow-300">int</span>(<span class="text-yellow-300">input</span>(<span class="text-emerald-300">"Angka: "</span>))\n\n<span class="text-slate-500"># 2. Proses</span>\n<span class="text-purple-400">hasil</span> = <span class="text-purple-400">angka</span> * <span class="text-purple-400">angka</span>\n\n<span class="text-slate-500"># 3. Output</span>\n<span class="text-yellow-300">print</span>(f<span class="text-emerald-300">"Hasil: {hasil}"</span>)`,
-          cpp: `<span class="text-blue-400">#include</span> <span class="text-emerald-300">&lt;iostream&gt;</span>\n<span class="text-blue-400">using namespace</span> std;\n\n<span class="text-blue-400">int</span> <span class="text-yellow-300">main</span>() {\n  <span class="text-blue-400">int</span> angka, hasil;\n  cin >> angka; <span class="text-slate-500">// Input</span>\n  hasil = angka * angka; <span class="text-slate-500">// Proses</span>\n  cout << <span class="text-emerald-300">"Hasil: "</span> << hasil; <span class="text-slate-500">// Output</span>\n  <span class="text-blue-400">return</span> <span class="text-orange-400">0</span>;\n}`,
-          js: `<span class="text-slate-500">// 1. Input</span>\n<span class="text-blue-400">let</span> <span class="text-purple-400">angka</span> = <span class="text-yellow-300">Number</span>(<span class="text-yellow-300">prompt</span>(<span class="text-emerald-300">"Angka:"</span>));\n\n<span class="text-slate-500">// 2. Proses</span>\n<span class="text-blue-400">let</span> <span class="text-purple-400">hasil</span> = <span class="text-purple-400">angka</span> * <span class="text-purple-400">angka</span>;\n\n<span class="text-slate-500">// 3. Output</span>\n<span class="text-yellow-300">console</span>.log(<span class="text-emerald-300">\`Hasil: \${hasil}\`</span>);`
+    // Database Kamus Elemen
+    const elementsData = {
+      input: {
+        name: "1. Input (Penerima Data)",
+        desc: "Digunakan untuk menerima data atau teks yang diketikkan oleh pengguna secara langsung ke dalam program.",
+        codes: {
+          python: `angka = input("Masukkan angka: ")\nprint("Kamu mengetik:", angka)`,
+          js: `let angka = prompt("Masukkan angka:");\nconsole.log("Kamu mengetik: " + angka);`,
+          cpp: `string angka;\ncin >> angka;\ncout << "Kamu mengetik: " << angka;`
         },
-        processLogic: (val) => {
-          const num = parseFloat(val) || 0;
-          return {
-            memory: { 'angka': num, 'hasil': num * num },
-            result: num * num,
-            log: `Input: ${num} | Kuadrat (${num} * ${num}) = ${num * num}`
-          };
-        }
+        hasInput: true,
+        inputPlaceholder: "Ketik sesuatu (misal: Halo Dunia)",
+        run: (val) => `Kamu mengetik: ${val || "Data Kosong"}`
       },
-      grade: {
-        title: "Cek Kelulusan",
-        inputLabel: "Masukkan Nilai Ujian (0-100):",
-        defaultValue: "75",
-        formula: "nilai >= 70 ?",
-        explanation: "Program memeriksa kondisi angka (IF/ELSE). Jika nilai 70 ke atas maka LULUS, jika di bawah 70 maka TIDAK LULUS.",
-        code: {
-          python: `<span class="text-purple-400">nilai</span> = <span class="text-yellow-300">int</span>(<span class="text-yellow-300">input</span>(<span class="text-emerald-300">"Nilai: "</span>))\n\n<span class="text-purple-400">if</span> <span class="text-purple-400">nilai</span> >= <span class="text-orange-400">70</span>:\n    <span class="text-purple-400">status</span> = <span class="text-emerald-300">"LULUS"</span>\n<span class="text-purple-400">else</span>:\n    <span class="text-purple-400">status</span> = <span class="text-emerald-300">"TIDAK LULUS"</span>\n\n<span class="text-yellow-300">print</span>(<span class="text-purple-400">status</span>)`,
-          cpp: `<span class="text-blue-400">int</span> nilai;\ncin >> nilai;\nstring status;\n\n<span class="text-purple-400">if</span> (nilai >= <span class="text-orange-400">70</span>) {\n  status = <span class="text-emerald-300">"LULUS"</span>;\n} <span class="text-purple-400">else</span> {\n  status = <span class="text-emerald-300">"TIDAK LULUS"</span>;\n}\ncout << status;`,
-          js: `<span class="text-blue-400">let</span> nilai = <span class="text-yellow-300">Number</span>(<span class="text-yellow-300">prompt</span>(<span class="text-emerald-300">"Nilai:"</span>));\n<span class="text-blue-400">let</span> status = nilai >= <span class="text-orange-400">70</span> ? <span class="text-emerald-300">"LULUS"</span> : <span class="text-emerald-300">"TIDAK LULUS"</span>;\n<span class="text-yellow-300">console</span>.log(status);`
+      variable: {
+        name: "2. Variabel (Penyimpanan Data)",
+        desc: "Kotak memori sementara untuk menyimpan nilai (angka, teks, dll) agar bisa digunakan kembali dalam program.",
+        codes: {
+          python: `nama = "Budi"\numur = 19\nprint(nama, "berumur", umur, "tahun")`,
+          js: `let nama = "Budi";\nlet umur = 19;\nconsole.log(nama + " berumur " + umur + " tahun");`,
+          cpp: `string nama = "Budi";\nint umur = 19;\ncout << nama << " berumur " << umur << " tahun";`
         },
-        processLogic: (val) => {
-          const score = parseFloat(val) || 0;
-          const status = score >= 70 ? "LULUS" : "TIDAK LULUS";
-          return {
-            memory: { 'nilai': score, 'status': `"${status}"` },
-            result: status,
-            log: `Evaluasi Nilai: ${score} >= 70 ➔ Status: ${status}`
-          };
-        }
+        hasInput: false,
+        run: () => `Budi berumur 19 tahun`
       },
-      greet: {
-        title: "Sapa Pengguna",
-        inputLabel: "Masukkan Nama Kamu:",
-        defaultValue: "Budi",
-        formula: '"Halo, " + nama',
-        explanation: "Program menerima input berupa teks (String), lalu menggabungkannya dengan kata sapaan 'Halo' sebelum dicetak ke layar.",
-        code: {
-          python: `<span class="text-purple-400">nama</span> = <span class="text-yellow-300">input</span>(<span class="text-emerald-300">"Nama: "</span>)\n<span class="text-purple-400">pesan</span> = <span class="text-emerald-300">"Halo, "</span> + <span class="text-purple-400">nama</span> + <span class="text-emerald-300">"!"</span>\n<span class="text-yellow-300">print</span>(<span class="text-purple-400">pesan</span>)`,
-          cpp: `<span class="text-blue-400">string</span> nama;\ncin >> nama;\n<span class="text-blue-400">string</span> pesan = <span class="text-emerald-300">"Halo, "</span> + nama + <span class="text-emerald-300">"!"</span>;\ncout << pesan;`,
-          js: `<span class="text-blue-400">let</span> nama = <span class="text-yellow-300">prompt</span>(<span class="text-emerald-300">"Nama:"</span>);\n<span class="text-blue-400">let</span> pesan = <span class="text-emerald-300">\`Halo, \${nama}!\`</span>;\n<span class="text-yellow-300">console</span>.log(pesan);`
+      if: {
+        name: "3. If (Percabangan Kondisi)",
+        desc: "Digunakan untuk membuat keputusan. Blok kode di dalam 'if' hanya dijalankan jika syaratnya bernilai benar (True).",
+        codes: {
+          python: `nilai = 85\nif nilai >= 75:\n    print("Selamat, Kamu Lulus!")`,
+          js: `let nilai = 85;\nif (nilai >= 75) {\n    console.log("Selamat, Kamu Lulus!");\n}`,
+          cpp: `int nilai = 85;\nif (nilai >= 75) {\n    cout << "Selamat, Kamu Lulus!";\n}`
         },
-        processLogic: (val) => {
-          const str = val || "Anonim";
-          const res = `Halo, ${str}!`;
-          return {
-            memory: { 'nama': `"${str}"`, 'pesan': `"${res}"` },
-            result: res,
-            log: `String Concatenation: "Halo, " + "${str}" ➔ "${res}"`
-          };
-        }
+        hasInput: false,
+        run: () => `Syarat terpenuhi (85 >= 75)\n➔ Selamat, Kamu Lulus!`
+      },
+      else: {
+        name: "4. Else (Kondisi Alternatif)",
+        desc: "Pasangan dari 'if'. Akan dijalankan secara otomatis jika syarat pada 'if' bernilai salah (False).",
+        codes: {
+          python: `nilai = 60\nif nilai >= 75:\n    print("Lulus")\nelse:\n    print("Maaf, Coba Lagi.")`,
+          js: `let nilai = 60;\nif (nilai >= 75) {\n    console.log("Lulus");\n} else {\n    console.log("Maaf, Coba Lagi.");\n}`,
+          cpp: `int nilai = 60;\nif (nilai >= 75) {\n    cout << "Lulus";\n} else {\n    cout << "Maaf, Coba Lagi.";\n}`
+        },
+        hasInput: false,
+        run: () => `Syarat 'if' salah (60 < 75)\n➔ Masuk blok else: Maaf, Coba Lagi.`
+      },
+      print: {
+        name: "5. Print / Output (Pencetak Hasil)",
+        desc: "Berfungsi untuk menampilkan teks, angka, atau hasil akhir perhitungan ke layar konsol/terminal.",
+        codes: {
+          python: `print("Halo, selamat belajar pemrograman!")`,
+          js: `console.log("Halo, selamat belajar pemrograman!");`,
+          cpp: `cout << "Halo, selamat belajar pemrograman!";`
+        },
+        hasInput: false,
+        run: () => `Halo, selamat belajar pemrograman!`
+      },
+      loop: {
+        name: "6. For Loop (Perulangan)",
+        desc: "Digunakan untuk mengulang suatu perintah atau baris kode secara otomatis berkali-kali tanpa menulis ulang.",
+        codes: {
+          python: `for i in range(3):\n    print("Perulangan ke-", i)`,
+          js: `for (let i = 0; i < 3; i++) {\n    console.log("Perulangan ke- " + i);\n}`,
+          cpp: `for (int i = 0; i < 3; i++) {\n    cout << "Perulangan ke- " << i << endl;\n}`
+        },
+        hasInput: false,
+        run: () => `Perulangan ke- 0\nPerulangan ke- 1\nPerulangan ke- 2`
+      },
+      function: {
+        name: "7. Function (Fungsi / Blok Siap Pakai)",
+        desc: "Kumpulan kode yang dibungkus dengan nama tertentu agar bisa dipanggil berulang kali saat dibutuhkan.",
+        codes: {
+          python: `def sapa(nama):\n    return "Halo, " + nama + "!"\n\nprint(sapa("Ani"))`,
+          js: `function sapa(nama) {\n    return "Halo, " + nama + "!";\n}\nconsole.log(sapa("Ani"));`,
+          cpp: `string sapa(string nama) {\n    return "Halo, " + nama + "!";\n}\n// Output: cout << sapa("Ani");`
+        },
+        hasInput: false,
+        run: () => `Memanggil fungsi sapa("Ani")...\n➔ Halo, Ani!`
       }
     };
 
-    // Render Tampilan Awal
-    function updateUI() {
-      const activeData = cases[currentCase];
-      
-      // Update Kode & Badge Language
-      document.getElementById('codeDisplay').innerHTML = activeData.code[currentLang];
-      document.getElementById('codeTitle').innerText = currentLang === 'python' ? 'main.py' : currentLang === 'cpp' ? 'main.cpp' : 'main.js';
-      document.getElementById('langBadge').innerText = currentLang;
-
-      // Update Form Labels
-      document.getElementById('inputLabel').innerText = activeData.inputLabel;
-      document.getElementById('userInput').value = activeData.defaultValue;
-      document.getElementById('processFormula').innerText = activeData.formula;
-      document.getElementById('explanationText').innerText = activeData.explanation;
-
-      // Highlight active language button
-      ['python', 'cpp', 'js'].forEach(lang => {
-        const btn = document.getElementById(`btn-${lang}`);
-        if(lang === currentLang) {
-          btn.className = "px-3 py-1.5 rounded-md transition-all bg-blue-600 text-white shadow";
-        } else {
-          btn.className = "px-3 py-1.5 rounded-md transition-all text-slate-400 hover:text-white";
-        }
-      });
-    }
-
-    function setLanguage(lang) {
-      currentLang = lang;
-      updateUI();
-    }
-
-    function changeCase() {
-      currentCase = document.getElementById('caseSelect').value;
-      updateUI();
-    }
-
-    // Fungsi Animasi Eksekusi Program (Step-by-Step)
-    async function runProcess() {
-      if(isRunning) return;
-      isRunning = true;
-
-      const runBtn = document.getElementById('runBtn');
-      runBtn.disabled = true;
-      runBtn.classList.add('opacity-50', 'cursor-not-allowed');
-
-      const inputVal = document.getElementById('userInput').value;
-      const data = cases[currentCase].processLogic(inputVal);
-
-      // Elements
-      const stepInput = document.getElementById('step-input');
-      const stepProcess = document.getElementById('step-process');
-      const stepOutput = document.getElementById('step-output');
-      const gearIcon = document.getElementById('gearIcon');
-      const outputDisplay = document.getElementById('outputDisplay');
-
-      // Reset Styles
-      [stepInput, stepProcess, stepOutput].forEach(s => s.classList.remove('border-blue-500', 'border-amber-500', 'border-emerald-500', 'glow-active'));
-      outputDisplay.innerText = "-";
-      outputDisplay.classList.remove('text-emerald-400');
-
-      // --- STEP 1: INPUT READING ---
-      stepInput.classList.add('border-blue-500', 'glow-active');
-      document.getElementById('status-input').innerText = "Membaca data...";
-      logConsole(`[System] Input diterima: "${inputVal}"`);
-      await sleep(1000);
-
-      document.getElementById('status-input').innerText = "OK";
-      stepInput.classList.remove('glow-active');
-
-      // --- STEP 2: PROCESSING ---
-      stepProcess.classList.add('border-amber-500', 'glow-active');
-      document.getElementById('status-process').innerText = "Mengeksekusi logika...";
-      gearIcon.classList.add('rotate-180', 'text-amber-400');
-
-      // Update RAM Inspector
-      renderMemory(data.memory);
-      logConsole(`[CPU] ${data.log}`);
-      await sleep(1200);
-
-      gearIcon.classList.remove('rotate-180', 'text-amber-400');
-      document.getElementById('status-process').innerText = "Selesai";
-      stepProcess.classList.remove('glow-active');
-
-      // --- STEP 3: OUTPUT PRINTING ---
-      stepOutput.classList.add('border-emerald-500', 'glow-active');
-      document.getElementById('status-output').innerText = "Mencetak hasil...";
-      outputDisplay.innerText = data.result;
-      outputDisplay.classList.add('text-emerald-400');
-      
-      logConsole(`[Output] Program Selesai. Hasil: ${data.result}`);
-      await sleep(800);
-
-      // Finish State
-      runBtn.disabled = false;
-      runBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-      isRunning = false;
-    }
-
-    // Helper: Update Memory Card
-    function renderMemory(memoryObj) {
-      const container = document.getElementById('memoryContainer');
+    // Render Tombol Elemen di Sidebar
+    function renderElementList() {
+      const container = document.getElementById('elementList');
       container.innerHTML = '';
 
-      for(const [key, val] of Object.entries(memoryObj)) {
-        const item = document.createElement('div');
-        item.className = 'bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center font-mono';
-        item.innerHTML = `
-          <span class="text-purple-400">${key}</span>
-          <span class="text-emerald-300 font-bold">${val}</span>
-        `;
-        container.appendChild(item);
+      for(const [key, item] of Object.entries(elementsData)) {
+        const btn = document.createElement('button');
+        btn.className = `text-left px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all flex items-center justify-between ${key === currentElement ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/20' : 'bg-slate-900 border border-slate-800 text-slate-300 hover:bg-slate-800'}`;
+        btn.innerHTML = `<span>${item.name}</span>`;
+        btn.onclick = () => selectElement(key);
+        container.appendChild(btn);
       }
     }
 
-    // Helper: Console Log
-    function logConsole(text) {
-      const log = document.getElementById('consoleLog');
-      const line = document.createElement('div');
-      line.innerText = text;
-      log.appendChild(line);
-      log.scrollTop = log.scrollHeight;
+    // Pilih Elemen
+    function selectElement(key) {
+      currentElement = key;
+      renderElementList();
+      updateDisplay();
     }
 
-    function clearConsole() {
-      document.getElementById('consoleLog').innerHTML = '<div class="text-slate-600">// Console dibersihkan.</div>';
+    // Ganti Bahasa
+    function setLanguage(lang) {
+      currentLang = lang;
+      
+      // Update styling tab bahasa
+      ['python', 'js', 'cpp'].forEach(l => {
+        const b = document.getElementById(`btn-${l}`);
+        if(l === lang) {
+          b.className = "px-3 py-1.5 rounded-md transition-all bg-emerald-600 text-white shadow";
+        } else {
+          b.className = "px-3 py-1.5 rounded-md transition-all text-slate-400 hover:text-white";
+        }
+      });
+
+      updateDisplay();
     }
 
-    function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
+    // Update Tampilan Kode & Deskripsi
+    function updateDisplay() {
+      const data = elementsData[currentElement];
+      
+      // Deskripsi
+      document.getElementById('elementDesc').innerText = data.desc;
+
+      // Kode
+      document.getElementById('codeDisplay').innerText = data.codes[currentLang];
+      
+      // File name & badge
+      let ext = currentLang === 'python' ? 'py' : currentLang === 'js' ? 'js' : 'cpp';
+      document.getElementById('codeFileName').innerText = `script.${ext}`;
+      document.getElementById('badgeLang').innerText = currentLang.toUpperCase();
+
+      // Input Area
+      const inputArea = document.getElementById('interactiveInputArea');
+      if(data.hasInput) {
+        inputArea.classList.remove('hidden');
+        inputArea.innerHTML = `
+          <label class="text-slate-400 block mb-1 font-medium">Simulasi Input Pengguna:</label>
+          <input type="text" id="simulatedInputVal" placeholder="${data.inputPlaceholder}" class="w-full bg-slate-900 border border-slate-700 rounded px-2.5 py-1.5 text-white font-mono focus:outline-none focus:border-emerald-500">
+        `;
+      } else {
+        inputArea.classList.add('hidden');
+      }
+
+      // Reset Terminal
+      document.getElementById('terminalOutput').innerHTML = '<span class="text-slate-600">Klik tombol "Jalankan Simulasi" untuk menguji elemen ini.</span>';
+      document.getElementById('runStatus').innerText = "Idle";
     }
 
-    // Initialize App
-    updateUI();
+    // Jalankan Simulasi
+    function executeSimulation() {
+      const data = elementsData[currentElement];
+      const terminal = document.getElementById('terminalOutput');
+      document.getElementById('runStatus').innerText = "Berjalan...";
+      
+      let inputVal = "";
+      if(data.hasInput) {
+        const inputEl = document.getElementById('simulatedInputVal');
+        if(inputEl) inputVal = inputEl.value;
+      }
+
+      setTimeout(() => {
+        const resultText = data.run(inputVal);
+        terminal.innerHTML = `<div class="whitespace-pre-line">${resultText}</div>`;
+        document.getElementById('runStatus').innerText = "Selesai (Success)";
+      }, 300);
+    }
+
+    // Inisialisasi awal
+    setLanguage('python');
+    renderElementList();
   </script>
 </body>
 </html>
